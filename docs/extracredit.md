@@ -1,19 +1,5 @@
-## Extra Credit Sections
-
-1.    [Consolidating findings into Security Hub](#consolidating-findings-into-security-hub)
-2.    [Log all commands](#logging-all-commands)
-
-## Consolidating findings into Security Hub
-1. You've seen findings in GuardDuty, but you want to collect those findings into your companies **Security Hub**.  Visit the Security Hub service and click **Go to Security Hub**
-2. Click **Enable Security Hub** to grant Security Hub permissions to read data from GuardDuty and Config.  Feel free to click **View Service Permissions** to understand what access you are granting.
-3. Click **Integrations** to view the currently enabled integrations.  Make sure that GuardDuty Integration is Enabled.  Feel free to enable any other available integration.  Note that most third party integrations will require additional configuration before they will be functional.
-4. View the **Findings** page, search for "Severity Label EQUALS HIGH".  (Note that the labels are case sensitive.) Click into the first finding. See that there is are fields to tell you severity and also a "Product Name" field that tells you the finding came from GuardDuty.
-5. View the **Insights** page to see the kinds of analysis that Security Hub has made for you.
-6. To make a new analysis, click **Create Insight**. Create your custom search: for example, you can search for **Severity Label EQUALS HIGH** and **Resource Type EQUALS AwsIamAccessKey**.  Finally, you must include a **Group by** filter, for example **Group By Type**
-7. Click **Create Insight** to save, and give your insight a name such as "High Severity IAM Access Key findings"
-8. Finally, note that you can see and send Insights into custom actions for notification and remediation.
-
-
+## Extra Credit Section
+[Log all commands](#logging-all-commands)
 
 ## Logging all commands
 There is a way to log all commands sent to the instance as well. First, you have to create S3 buckets and CloudWatch Logs.
