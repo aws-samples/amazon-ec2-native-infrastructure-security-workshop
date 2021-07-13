@@ -16,7 +16,7 @@ We want to enable detailed, holistic logging and network-based security monitori
 2.    If it appears, click on Getting Started.
 3.    We want to **Create trail**. 
       * What are we capturing, exactly? 
-4.    Let’s set a **Trail Name** of “**All-API-Commands-across-all-Regions**”. Then let’s **Apply trail to all regions** with a single click.
+4.    Let’s set a **Trail Name** of “**All-API-Commands-across-all-Regions**”. 
 5.    Seeing **All Read/Write events** would show us every API call made to our AWS environment moving forward.
 6.    We should save these for further evaluation, so you would want to **Create a new S3 bucket** and call it “**cloudsecurity-demo-bucket-{myname}**”. (Don’t forget, S3 buckets must have unique names, so make sure to add your name at the end. They can also only be lower case letters, numbers, “-“, and “.”)
 7.    Let’s **Create** that trail. We can come back to look at it later.
