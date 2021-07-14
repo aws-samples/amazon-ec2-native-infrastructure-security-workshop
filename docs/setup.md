@@ -8,7 +8,7 @@
 5.  Now under **Services** open **Management & Governance**, **CloudFormation**
 6.  Click “**Create Stack**”
 7.  Save this file to your desktop: [InfraSecBuilderSessionEnvBuild.json](https://raw.githubusercontent.com/cassiamartin/cloud_native_infrasec/master/InfraSecBuilderSessionEnvBuild.json)
-8.  In CloudFormation, choose **upload a template file**, and choose the json file you just downloaded: 
+8.  In CloudFormation, choose **upload a template file**, and choose the json file you just downloaded. 
 9.  Fill out the screen as follows:
     *   Stack Name: "**CloudSecurity-Demo-Stack**"
     *   Availability Zone 1: **Pick any availability zone**

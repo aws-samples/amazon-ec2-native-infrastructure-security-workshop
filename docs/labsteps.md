@@ -12,20 +12,23 @@
 ## Enable granular logging to see everything in your AWS environment
 We want to enable detailed, holistic logging and network-based security monitoring.
 
-1.    Go to the **CloudTrail** service in the console
+1.    Go to the **CloudTrail** service in the console.  
 2.    If it appears, click on Getting Started.
 3.    We want to **Create trail**. 
-      * What are we capturing, exactly? 
 4.    Let’s set a **Trail Name** of “**All-API-Commands-across-all-Regions**”. 
-5.    Seeing **All Read/Write events** would show us every API call made to our AWS environment moving forward.
 6.    We should save these for further evaluation, so you would want to **Create a new S3 bucket** and call it “**cloudsecurity-demo-bucket-{myname}**”. (Don’t forget, S3 buckets must have unique names, so make sure to add your name at the end. They can also only be lower case letters, numbers, “-“, and “.”)
-7.    Let’s **Create** that trail. We can come back to look at it later.
-Monitoring what API calls are made is great, but it’s difficult to convert that into something like Change Management for all infrastructure in the cloud. Is there a service to help there?
+1.    Log file encryption will be enabled by default. Give it the name of a new KMS key to use for the encryption by specifiying "**cloudsecurity-demo-kms-key**".
+7.    After we **Create** that trail, we'll get the option to pick what **Events** we want to record.
+1.    Make sure to select **Management Events**, with **Read** / **Write** activity, at minimum.  These options will show us every API call made to our AWS environment moving forward.
+     * What are your other options? When would you want to enable those? 
+1. Click *Create* to finalize the trail.  We can come back to look at the results later.
+     * Monitoring what API calls are made is great, but it’s difficult to convert that into something like Change Management for all infrastructure in the cloud. Is there a service to help there?
 8.    Let us also look into one of the **Services** called **Config**.
 9.    After **Getting Started** we can start tracking All resources, Including Global Resources
-10.    We would want to store this data in a central bucket as well. Let’s **Create a new bucket** and use the default to ensure its unique (Note: We could use the bucket we just created, but you would have to add permissions, which would take more time).
 11.    AWS does a good job of clearly defining roles, so let’s allow AWS to **Create AWS Config service-linked role**
-12.    **Next**, we can choose rules we want to test against, but we can do that later too if we **Skip** it for now.
+10.    We would want to store this data in a central bucket as well. Let’s **Create a new bucket** and use the default to ensure it's unique. 
+    * Note: We could use the bucket we just created, but you would have to add permissions, which would take more time.
+12.    **Next**, we can choose rules we want to test against, but we can do that later too if we skip it for now.
 13.    **Confirm** these choices to enable Config to monitor all changes to our environment. And we’ll see that in a bit.  
 Now that we’ve got good logging of the Control Plane (API commands and Changes to the environment), let’s turn on logging of the Data Plane.
 14.    Then, let us use a **Service** like **GuardDuty** to monitor logs in near real time for security anomalies.
@@ -39,8 +42,8 @@ Let's review and improve upon granular control of communication between workload
 1. Looking at the granular control of system-to-system communication used to be difficult. Now, looking at your **EC2** Service **Security Groups** allows you to quickly see who can talk to whom.
 2.    Picking a Security Group like the **Services Server Security Group** we can see the more traditional way of doing things.
 3.    Checking the **Outbound** rules, we see the servers can talk to a range of IP’s, 65,536 to be precise. But there are only maybe 6-8 servers that they actually need to talk to.
-4.    Well, if we copy the **GroupID** of the **PoC Web Server Security Group** we can start to reduce that number
-5.    **Edit** the **Outbound** set of rules for the **Services Server Security Group** and replace the 10.0.0.0/16 with the Security Group name you copied.
+4.    Well, if we copy the **Security Group ID** of the **PoC Web Server Security Group** we can start to reduce that number
+5.    **Edit** the **Outbound** set of rules for the **Services Server Security Group**. Delete the 10.0.0.0/16 rule and make a new rule with the Security Group name you copied.
 6.    **Save** this and you’ll see the **Destination** of the rule now shows the Security Group you listed.
 7.    You can **repeat** this by **Edit**ing and **Adding Rule**s for each security group you want to allow access to.
 
@@ -52,7 +55,7 @@ Let's improve on our network-based controls by using Network ACLs to prevent sid
 1.    Security Groups are awesome at allowing access, but in **VPC** Services, **Network ACLs** are great at explicitly blocking them.
 2.    For instance, if you wanted to make sure you explicitly blocked the Load Balancer in my WebApp from talking to my Database servers, you could **Create a network ACL**.
 3.    I would name it “**LoadBalancerIsolation**” and put it in the **Web Application VPC**.
-4.    I would add an **Outbound Rule** by **Editing Outbound Rules**
+4.    After selecting the new network ACL, I would add an **Outbound Rule** by **Editing Outbound Rules**
 5.    **Adding Rules** like these would block whatever Subnet you apply this to from talking to the Database Subnets but still allow access to the rest of the network, including the Web and Services VPC. Note that NACLs are evaluated in the specific order of their Rule #. 
       * Rule #: **50**  
       Of type **All Traffic**  
@@ -74,7 +77,7 @@ Let's improve on our network-based controls by using Network ACLs to prevent sid
       To the Destination **0.0.0.0/0**  
       And a **Allow** Behavior
 2.    After **Saving** you would then use **Subnet Associations** to **Edit Subnet Associations**.
-3.    Here you would Associate with the **Web App Public Subnet in AZ1** and **Web App Public Subnet in AZ2** subnets by clicking **Edit**.
+3.    Here you would Associate with the **Web App Public Subnet in AZ1** and **Web App Public Subnet in AZ2** subnets by selecting the subnets and clicking **Save changes**.
 
       Now, you’ve effectively ensured that if the Load Balancers in your environment misbehave, they can’t communicate with or compromise the Database servers directly. But there was no additional hardware, firewall, or complex routing required to make this simple change in the simple network topology.
 
@@ -82,7 +85,7 @@ Let's improve on our network-based controls by using Network ACLs to prevent sid
 
 1.    You would **Create a network ACL**.
 2.    Name it “**PoCProtectionAZ1**” and put it in the **Proof of Concept VPC**.
-3.    Add an **Outbound Rule** by **Editing Outbound Rules**
+3.    Select the new ACL, and add an **Outbound Rule** by **Editing Outbound Rules**
 4.    **Add Rules**
       * Rule #: **50**  
       Of type **All Traffic**  
@@ -100,7 +103,7 @@ Let's improve on our network-based controls by using Network ACLs to prevent sid
       To the Destination **0.0.0.0/0**  
       And an **Allow** Behavior  
 1.    After **Saving** you would then use **Subnet Associations** to **Edit Subnet Associations**.
-2.    Here you would Associate with the **Proof of Concept Public Subnet in AZ1** subnets by clicking **Edit**.
+2.    Here you would Associate with the **Proof of Concept Public Subnet in AZ1** subnets by selecting it and clicking **Save Changes**.
 3.    You can choose to duplicate those steps to block the other direction by setting
       * Name to “**PoCProtectionAZ2**”
       * Blocking traffic to the Destination **10.250.0.0/24**
@@ -117,10 +120,10 @@ Now, even within the same workload or application you are protecting servers fro
 5.    Let's go to **Config**.
 6.    I can see all of my resources, including some called **EC2 NetworkAcl**.
 3.    Clicking there gives you a list of ACL’s, and you can **click** on the first one.
-4.    Seeing details on that ACL, you can also see a visual **Configuration Timeline**
+4.    Seeing details on that ACL, you can also see a visual **Resource Timeline**
 5.    In the configuration timeline, you can see the changes that occurred over the past few minutes.  
       * If you don’t see any changes go back and choose a different ACL
-6.    If you expand **Changes** you can see exactly what changes you made to the resource, including what you applied it to as a **Relationship Change**.
+6.    If you expand the **Configuration change** item, you can see exactly what changes you made to the resource, including what you applied it to as a "Relationship Change".
 
 How would you do this on-premises?
 
@@ -128,7 +131,7 @@ How would you do this on-premises?
 1.    Let’s go back to **GuardDuty** and see what findings we may have.  If this is a new or infrequently used account, you may have no Findings. If you do have Findings and this is not a new account, we can walk through those separately.
 2.    Since this is a good design and relatively new, let’s create some demonstration findings in **Settings**
 3.    After we **Generate sample findings** we can go back to the **Findings**
-4.    16 High Severity Findings, 30 Medium Severity Findings, and 7 Informational Findings (where can you see those numbers quickly) show up. Let’s investigate the High Severity finding called **[SAMPLE] 
+4.    You'll see some High Severity, Medium Severity,  and Informational Findings. Let’s investigate the High Severity finding called **[SAMPLE] 
 [SAMPLE] Backdoor:EC2/DenialOfService.Dns**
 5.    You can see the (fake) instance that caused this Finding, what the instance did wrong, when it occurred, and more information. The “.Dns” at the end means something, do you know what? Does the **Action Type** help?  
       * What are the 3 data sources GuardDuty uses?
