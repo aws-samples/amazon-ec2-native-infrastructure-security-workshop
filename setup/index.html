@@ -383,16 +383,16 @@
                 <h3 id="build-the-environment-using-cloudformation">Build the environment using CloudFormation</h3>
 <ol>
 <li>We will need an EC2 Key Pair to build this stack.</li>
-<li>Under <strong>Services</strong> go to <strong>EC2</strong>.</li>
+<li>Under <strong>Services</strong>, <strong>Compute</strong>  go to <strong>EC2</strong>.</li>
 <li>Select <strong>Key Pairs</strong> on the left.</li>
 <li><strong>Create a Key Pair</strong>. Name the Key Pair "<strong>CloudSecurityDemoKP</strong>" and save the file to your desktop.<ul>
 <li>We will not need the file, but a Key Pair must exist</li>
 </ul>
 </li>
-<li>Now under <strong>Services</strong> open <strong>CloudFormation</strong></li>
+<li>Now under <strong>Services</strong> open <strong>Management &amp; Governance</strong>, <strong>CloudFormation</strong></li>
 <li>Click “<strong>Create Stack</strong>”</li>
-<li>In your Github tab, right-click to download the raw <a href="https://raw.githubusercontent.com/cassiamartin/cloud_native_infrasec/master/InfraSecBuilderSessionEnvBuild.json">InfraSecBuilderSessionEnvBuild.json</a></li>
-<li>In CloudFormation, choose <strong>upload a template file</strong>, and choose the json file you just downloaded: </li>
+<li>Save this file to your desktop: <a href="https://raw.githubusercontent.com/cassiamartin/cloud_native_infrasec/master/InfraSecBuilderSessionEnvBuild.json">InfraSecBuilderSessionEnvBuild.json</a></li>
+<li>In CloudFormation, choose <strong>upload a template file</strong>, and choose the json file you just downloaded. </li>
 <li>Fill out the screen as follows:<ul>
 <li>Stack Name: "<strong>CloudSecurity-Demo-Stack</strong>"</li>
 <li>Availability Zone 1: <strong>Pick any availability zone</strong></li>
@@ -408,7 +408,7 @@
 </ul>
 </li>
 <li>Click “Create Stack”</li>
-<li>Refresh the CloudFormation interface until the Status shows “Create Complete”</li>
+<li>Refresh the CloudFormation interface until the Status of the CloudSecurity demo stack shows “Create Complete”</li>
 <li>Click on the Stack Name</li>
 <li>Go to the Outputs tab of the Stack</li>
 <li>Copy the following DNS names into a separate note pad. You can go to these in a web browser to validate that the Web servers are publicly accessible.<ul>

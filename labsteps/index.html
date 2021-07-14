@@ -481,22 +481,29 @@
 <h2 id="enable-granular-logging-to-see-everything-in-your-aws-environment">Enable granular logging to see everything in your AWS environment</h2>
 <p>We want to enable detailed, holistic logging and network-based security monitoring.</p>
 <ol>
-<li>Go to the <strong>CloudTrail</strong> service in the console</li>
+<li>Go to the <strong>CloudTrail</strong> service in the console.  </li>
 <li>If it appears, click on Getting Started.</li>
-<li>We want to <strong>Create trail</strong>. <ul>
-<li>What are we capturing, exactly? </li>
+<li>We want to <strong>Create trail</strong>. </li>
+<li>Let’s set a <strong>Trail Name</strong> of “<strong>All-API-Commands-across-all-Regions</strong>”. </li>
+<li>We should save these for further evaluation, so you would want to <strong>Create a new S3 bucket</strong> and call it “<strong>cloudsecurity-demo-bucket-{myname}</strong>”. (Don’t forget, S3 buckets must have unique names, so make sure to add your name at the end. They can also only be lower case letters, numbers, “-“, and “.”)</li>
+<li>Log file encryption will be enabled by default. Give it the name of a new KMS key to use for the encryption by specifiying "<strong>cloudsecurity-demo-kms-key</strong>".</li>
+<li>After we <strong>Create</strong> that trail, we'll get the option to pick what <strong>Events</strong> we want to record.</li>
+<li>Make sure to select <strong>Management Events</strong>, with <strong>Read</strong> / <strong>Write</strong> activity, at minimum.  These options will show us every API call made to our AWS environment moving forward.<ul>
+<li>What are your other options? When would you want to enable those? </li>
 </ul>
 </li>
-<li>Let’s set a <strong>Trail Name</strong> of “<strong>All-API-Commands-across-all-Regions</strong>”. </li>
-<li>Seeing <strong>All Read/Write events</strong> would show us every API call made to our AWS environment moving forward.</li>
-<li>We should save these for further evaluation, so you would want to <strong>Create a new S3 bucket</strong> and call it “<strong>cloudsecurity-demo-bucket-{myname}</strong>”. (Don’t forget, S3 buckets must have unique names, so make sure to add your name at the end. They can also only be lower case letters, numbers, “-“, and “.”)</li>
-<li>Let’s <strong>Create</strong> that trail. We can come back to look at it later.
-Monitoring what API calls are made is great, but it’s difficult to convert that into something like Change Management for all infrastructure in the cloud. Is there a service to help there?</li>
+<li>Click <em>Create</em> to finalize the trail.  We can come back to look at the results later.<ul>
+<li>Monitoring what API calls are made is great, but it’s difficult to convert that into something like Change Management for all infrastructure in the cloud. Is there a service to help there?</li>
+</ul>
+</li>
 <li>Let us also look into one of the <strong>Services</strong> called <strong>Config</strong>.</li>
 <li>After <strong>Getting Started</strong> we can start tracking All resources, Including Global Resources</li>
-<li>We would want to store this data in a central bucket as well. Let’s <strong>Create a new bucket</strong> and use the default to ensure its unique (Note: We could use the bucket we just created, but you would have to add permissions, which would take more time).</li>
 <li>AWS does a good job of clearly defining roles, so let’s allow AWS to <strong>Create AWS Config service-linked role</strong></li>
-<li><strong>Next</strong>, we can choose rules we want to test against, but we can do that later too if we <strong>Skip</strong> it for now.</li>
+<li>We would want to store this data in a central bucket as well. Let’s <strong>Create a new bucket</strong> and use the default to ensure it's unique. <ul>
+<li>Note: We could use the bucket we just created, but you would have to add permissions, which would take more time.</li>
+</ul>
+</li>
+<li><strong>Next</strong>, we can choose rules we want to test against, but we can do that later too if we skip it for now.</li>
 <li><strong>Confirm</strong> these choices to enable Config to monitor all changes to our environment. And we’ll see that in a bit.<br />
 Now that we’ve got good logging of the Control Plane (API commands and Changes to the environment), let’s turn on logging of the Data Plane.</li>
 <li>Then, let us use a <strong>Service</strong> like <strong>GuardDuty</strong> to monitor logs in near real time for security anomalies.</li>
@@ -509,8 +516,8 @@ Now that we’ve got good logging of the Control Plane (API commands and Changes
 <li>Looking at the granular control of system-to-system communication used to be difficult. Now, looking at your <strong>EC2</strong> Service <strong>Security Groups</strong> allows you to quickly see who can talk to whom.</li>
 <li>Picking a Security Group like the <strong>Services Server Security Group</strong> we can see the more traditional way of doing things.</li>
 <li>Checking the <strong>Outbound</strong> rules, we see the servers can talk to a range of IP’s, 65,536 to be precise. But there are only maybe 6-8 servers that they actually need to talk to.</li>
-<li>Well, if we copy the <strong>GroupID</strong> of the <strong>PoC Web Server Security Group</strong> we can start to reduce that number</li>
-<li><strong>Edit</strong> the <strong>Outbound</strong> set of rules for the <strong>Services Server Security Group</strong> and replace the 10.0.0.0/16 with the Security Group name you copied.</li>
+<li>Well, if we copy the <strong>Security Group ID</strong> of the <strong>PoC Web Server Security Group</strong> we can start to reduce that number</li>
+<li><strong>Edit</strong> the <strong>Outbound</strong> set of rules for the <strong>Services Server Security Group</strong>. Delete the 10.0.0.0/16 rule and make a new rule with the Security Group name you copied.</li>
 <li><strong>Save</strong> this and you’ll see the <strong>Destination</strong> of the rule now shows the Security Group you listed.</li>
 <li>You can <strong>repeat</strong> this by <strong>Edit</strong>ing and <strong>Adding Rule</strong>s for each security group you want to allow access to.</li>
 </ol>
@@ -521,7 +528,7 @@ Now that we’ve got good logging of the Control Plane (API commands and Changes
 <li>Security Groups are awesome at allowing access, but in <strong>VPC</strong> Services, <strong>Network ACLs</strong> are great at explicitly blocking them.</li>
 <li>For instance, if you wanted to make sure you explicitly blocked the Load Balancer in my WebApp from talking to my Database servers, you could <strong>Create a network ACL</strong>.</li>
 <li>I would name it “<strong>LoadBalancerIsolation</strong>” and put it in the <strong>Web Application VPC</strong>.</li>
-<li>I would add an <strong>Outbound Rule</strong> by <strong>Editing Outbound Rules</strong></li>
+<li>After selecting the new network ACL, I would add an <strong>Outbound Rule</strong> by <strong>Editing Outbound Rules</strong></li>
 <li><strong>Adding Rules</strong> like these would block whatever Subnet you apply this to from talking to the Database Subnets but still allow access to the rest of the network, including the Web and Services VPC. Note that NACLs are evaluated in the specific order of their Rule #. <ul>
 <li>Rule #: <strong>50</strong><br />
   Of type <strong>All Traffic</strong><br />
@@ -548,7 +555,7 @@ Now that we’ve got good logging of the Control Plane (API commands and Changes
 </li>
 <li>After <strong>Saving</strong> you would then use <strong>Subnet Associations</strong> to <strong>Edit Subnet Associations</strong>.</li>
 <li>
-<p>Here you would Associate with the <strong>Web App Public Subnet in AZ1</strong> and <strong>Web App Public Subnet in AZ2</strong> subnets by clicking <strong>Edit</strong>.</p>
+<p>Here you would Associate with the <strong>Web App Public Subnet in AZ1</strong> and <strong>Web App Public Subnet in AZ2</strong> subnets by selecting the subnets and clicking <strong>Save changes</strong>.</p>
 <p>Now, you’ve effectively ensured that if the Load Balancers in your environment misbehave, they can’t communicate with or compromise the Database servers directly. But there was no additional hardware, firewall, or complex routing required to make this simple change in the simple network topology.</p>
 <p>But let’s say you want to go further. The Proof of Concept servers you built aren’t exchanging state so they don’t need to communicate to each other. This way, if one gets compromised it can’t hurt the other. Let’s build that protection.</p>
 </li>
@@ -556,7 +563,7 @@ Now that we’ve got good logging of the Control Plane (API commands and Changes
 <p>You would <strong>Create a network ACL</strong>.</p>
 </li>
 <li>Name it “<strong>PoCProtectionAZ1</strong>” and put it in the <strong>Proof of Concept VPC</strong>.</li>
-<li>Add an <strong>Outbound Rule</strong> by <strong>Editing Outbound Rules</strong></li>
+<li>Select the new ACL, and add an <strong>Outbound Rule</strong> by <strong>Editing Outbound Rules</strong></li>
 <li>
 <p><strong>Add Rules</strong></p>
 <ul>
@@ -581,7 +588,7 @@ Now that we’ve got good logging of the Control Plane (API commands and Changes
 </ul>
 </li>
 <li>After <strong>Saving</strong> you would then use <strong>Subnet Associations</strong> to <strong>Edit Subnet Associations</strong>.</li>
-<li>Here you would Associate with the <strong>Proof of Concept Public Subnet in AZ1</strong> subnets by clicking <strong>Edit</strong>.</li>
+<li>Here you would Associate with the <strong>Proof of Concept Public Subnet in AZ1</strong> subnets by selecting it and clicking <strong>Save Changes</strong>.</li>
 <li>You can choose to duplicate those steps to block the other direction by setting<ul>
 <li>Name to “<strong>PoCProtectionAZ2</strong>”</li>
 <li>Blocking traffic to the Destination <strong>10.250.0.0/24</strong></li>
@@ -600,12 +607,12 @@ Now that we’ve got good logging of the Control Plane (API commands and Changes
 <li>Let's go to <strong>Config</strong>.</li>
 <li>I can see all of my resources, including some called <strong>EC2 NetworkAcl</strong>.</li>
 <li>Clicking there gives you a list of ACL’s, and you can <strong>click</strong> on the first one.</li>
-<li>Seeing details on that ACL, you can also see a visual <strong>Configuration Timeline</strong></li>
+<li>Seeing details on that ACL, you can also see a visual <strong>Resource Timeline</strong></li>
 <li>In the configuration timeline, you can see the changes that occurred over the past few minutes.  <ul>
 <li>If you don’t see any changes go back and choose a different ACL</li>
 </ul>
 </li>
-<li>If you expand <strong>Changes</strong> you can see exactly what changes you made to the resource, including what you applied it to as a <strong>Relationship Change</strong>.</li>
+<li>If you expand the <strong>Configuration change</strong> item, you can see exactly what changes you made to the resource, including what you applied it to as a "Relationship Change".</li>
 </ol>
 <p>How would you do this on-premises?</p>
 <h2 id="logging-and-monitoring-of-the-network-for-bad-behavior-is-important-too">Logging and monitoring of the network for bad behavior is important too</h2>
@@ -613,7 +620,7 @@ Now that we’ve got good logging of the Control Plane (API commands and Changes
 <li>Let’s go back to <strong>GuardDuty</strong> and see what findings we may have.  If this is a new or infrequently used account, you may have no Findings. If you do have Findings and this is not a new account, we can walk through those separately.</li>
 <li>Since this is a good design and relatively new, let’s create some demonstration findings in <strong>Settings</strong></li>
 <li>After we <strong>Generate sample findings</strong> we can go back to the <strong>Findings</strong></li>
-<li>16 High Severity Findings, 30 Medium Severity Findings, and 7 Informational Findings (where can you see those numbers quickly) show up. Let’s investigate the High Severity finding called <strong>[SAMPLE] 
+<li>You'll see some High Severity, Medium Severity,  and Informational Findings. Let’s investigate the High Severity finding called <strong>[SAMPLE] 
 [SAMPLE] Backdoor:EC2/DenialOfService.Dns</strong></li>
 <li>You can see the (fake) instance that caused this Finding, what the instance did wrong, when it occurred, and more information. The “.Dns” at the end means something, do you know what? Does the <strong>Action Type</strong> help?  <ul>
 <li>What are the 3 data sources GuardDuty uses?</li>
