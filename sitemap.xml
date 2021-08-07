@@ -2,37 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
      <loc>https://ec2-infra-sec.awssecworkshops.com/</loc>
-     <lastmod>2021-07-14</lastmod>
+     <lastmod>2021-08-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://ec2-infra-sec.awssecworkshops.com/setup/</loc>
-     <lastmod>2021-07-14</lastmod>
+     <lastmod>2021-08-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://ec2-infra-sec.awssecworkshops.com/labsteps/</loc>
-     <lastmod>2021-07-14</lastmod>
+     <lastmod>2021-08-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://ec2-infra-sec.awssecworkshops.com/extracredit/</loc>
-     <lastmod>2021-07-14</lastmod>
+     <lastmod>2021-08-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://ec2-infra-sec.awssecworkshops.com/cleanup/</loc>
-     <lastmod>2021-07-14</lastmod>
+     <lastmod>2021-08-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://ec2-infra-sec.awssecworkshops.com/contribute/</loc>
-     <lastmod>2021-07-14</lastmod>
+     <lastmod>2021-08-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://ec2-infra-sec.awssecworkshops.com/license/</loc>
-     <lastmod>2021-07-14</lastmod>
+     <lastmod>2021-08-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
 </urlset>

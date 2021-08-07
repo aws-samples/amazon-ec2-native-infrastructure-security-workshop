@@ -651,23 +651,23 @@ Now that we’ve got good logging of the Control Plane (API commands and Changes
 <li>
 <p>Is this a console? For the AWS server? Let’s find out.<br />
        Type: </p>
-<div class="codehilite"><pre><span></span><span class="err">&gt;  TOKEN=`curl -X PUT &quot;http://169.254.169.254/latest/api/token&quot; -H &quot;X-aws-ec2-metadata-token-ttl-seconds: 21600&quot;`  </span>
-<span class="err">&gt;  curl -H &quot;X-aws-ec2-metadata-token: $TOKEN&quot;  http://169.254.169.254/latest/meta-data/instance-id</span>
+<div class="codehilite"><pre><span></span><span class="err">TOKEN=`curl -X PUT &quot;http://169.254.169.254/latest/api/token&quot; -H &quot;X-aws-ec2-metadata-token-ttl-seconds: 21600&quot;`  </span>
+<span class="err">curl -H &quot;X-aws-ec2-metadata-token: $TOKEN&quot;  http://169.254.169.254/latest/meta-data/instance-id</span>
 </pre></div>
 
 
 <p>Does that instance ID look familiar?</p>
-<div class="codehilite"><pre><span></span><span class="err">&gt;  curl -H &quot;X-aws-ec2-metadata-token: $TOKEN&quot;  http://169.254.169.254/latest/meta-data/security-groups</span>
+<div class="codehilite"><pre><span></span><span class="err">curl -H &quot;X-aws-ec2-metadata-token: $TOKEN&quot;  http://169.254.169.254/latest/meta-data/security-groups</span>
 </pre></div>
 
 
 <p>That looks like the Security Group we modified doesn’t it?</p>
-<div class="codehilite"><pre><span></span><span class="err">&gt;  ping 8.8.8.8</span>
+<div class="codehilite"><pre><span></span><span class="err">ping 8.8.8.8</span>
 </pre></div>
 
 
 <p>Should it work?</p>
-<div class="codehilite"><pre><span></span><span class="err">&gt;  curl -H &quot;X-aws-ec2-metadata-token: $TOKEN&quot;  http://169.254.169.254/latest/meta-data/iam/security-credentials/SharedServerConnectivityRole</span>
+<div class="codehilite"><pre><span></span><span class="err">curl -H &quot;X-aws-ec2-metadata-token: $TOKEN&quot;  http://169.254.169.254/latest/meta-data/iam/security-credentials/SharedServerConnectivityRole</span>
 </pre></div>
 
 
