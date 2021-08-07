@@ -487,8 +487,7 @@
 <li>Let’s set a <strong>Trail Name</strong> of “<strong>All-API-Commands-across-all-Regions</strong>”. </li>
 <li>We should save these for further evaluation, so you would want to <strong>Create a new S3 bucket</strong> and call it “<strong>cloudsecurity-demo-bucket-{myname}</strong>”. (Don’t forget, S3 buckets must have unique names, so make sure to add your name at the end. They can also only be lower case letters, numbers, “-“, and “.”)</li>
 <li>Log file encryption will be enabled by default. Give it the name of a new KMS key to use for the encryption by specifiying "<strong>cloudsecurity-demo-kms-key</strong>".</li>
-<li>After we <strong>Create</strong> that trail, we'll get the option to pick what <strong>Events</strong> we want to record.</li>
-<li>Make sure to select <strong>Management Events</strong>, with <strong>Read</strong> / <strong>Write</strong> activity, at minimum.  These options will show us every API call made to our AWS environment moving forward.<ul>
+<li>Now we'll get the option to pick what <strong>Events</strong> we want to record. Make sure to select <strong>Management Events</strong>, with <strong>Read</strong> / <strong>Write</strong> activity, at minimum.  These options will show us every API call made to our AWS environment moving forward.<ul>
 <li>What are your other options? When would you want to enable those? </li>
 </ul>
 </li>
@@ -517,18 +516,18 @@ Now that we’ve got good logging of the Control Plane (API commands and Changes
 <li>Picking a Security Group like the <strong>Services Server Security Group</strong> we can see the more traditional way of doing things.</li>
 <li>Checking the <strong>Outbound</strong> rules, we see the servers can talk to a range of IP’s, 65,536 to be precise. But there are only maybe 6-8 servers that they actually need to talk to.</li>
 <li>Well, if we copy the <strong>Security Group ID</strong> of the <strong>PoC Web Server Security Group</strong> we can start to reduce that number</li>
-<li><strong>Edit</strong> the <strong>Outbound</strong> set of rules for the <strong>Services Server Security Group</strong>. Delete the 10.0.0.0/16 rule and make a new rule with the Security Group name you copied.</li>
+<li><strong>Edit</strong> the <strong>Outbound</strong> set of rules for the <strong>Services Server Security Group</strong>. Delete the 10.0.0.0/16 rule. Then, make a new rule with the Security Group name you copied.</li>
 <li><strong>Save</strong> this and you’ll see the <strong>Destination</strong> of the rule now shows the Security Group you listed.</li>
 <li>You can <strong>repeat</strong> this by <strong>Edit</strong>ing and <strong>Adding Rule</strong>s for each security group you want to allow access to.</li>
 </ol>
 <p>In doing this, you’ve reduced the scope of internal traffic communication from 65,636 host down to 8. Additionally, if you ever need to stand up more servers in these groups, they would be automatically accessible without intervention, as long as you put them in the same Security Group. On premise, you would either need to have Firewalls between all internal VLAN’s, Routers, and sites or complex Network ACL’s on every switch in your environment. This reduces the risk of threats, the risk of misconfiguration, and the operational burden all at once.</p>
 <h2 id="when-security-includes-explicitly-denying-network-access">When Security includes explicitly denying network access</h2>
-<p>Let's improve on our network-based controls by using Network ACLs to prevent side-to-side movement in a granular way.</p>
+<p>Let's improve on our network-based controls by using Network ACLs to prevent lateral movement in a granular way.</p>
 <ol>
 <li>Security Groups are awesome at allowing access, but in <strong>VPC</strong> Services, <strong>Network ACLs</strong> are great at explicitly blocking them.</li>
 <li>For instance, if you wanted to make sure you explicitly blocked the Load Balancer in my WebApp from talking to my Database servers, you could <strong>Create a network ACL</strong>.</li>
-<li>I would name it “<strong>LoadBalancerIsolation</strong>” and put it in the <strong>Web Application VPC</strong>.</li>
-<li>After selecting the new network ACL, I would add an <strong>Outbound Rule</strong> by <strong>Editing Outbound Rules</strong></li>
+<li>You can name it “<strong>LoadBalancerIsolation</strong>” and put it in the <strong>Web Application VPC</strong>.</li>
+<li>After selecting the new network ACL, add an <strong>Outbound Rule</strong> by <strong>Editing Outbound Rules</strong></li>
 <li><strong>Adding Rules</strong> like these would block whatever Subnet you apply this to from talking to the Database Subnets but still allow access to the rest of the network, including the Web and Services VPC. Note that NACLs are evaluated in the specific order of their Rule #. <ul>
 <li>Rule #: <strong>50</strong><br />
   Of type <strong>All Traffic</strong><br />
@@ -621,23 +620,23 @@ Now that we’ve got good logging of the Control Plane (API commands and Changes
 <li>Since this is a good design and relatively new, let’s create some demonstration findings in <strong>Settings</strong></li>
 <li>After we <strong>Generate sample findings</strong> we can go back to the <strong>Findings</strong></li>
 <li>You'll see some High Severity, Medium Severity,  and Informational Findings. Let’s investigate the High Severity finding called <strong>[SAMPLE] 
-[SAMPLE] Backdoor:EC2/DenialOfService.Dns</strong></li>
+[SAMPLE] Backdoor:EC2/C&amp;CActivity.B!DNS</strong></li>
 <li>You can see the (fake) instance that caused this Finding, what the instance did wrong, when it occurred, and more information. The “.Dns” at the end means something, do you know what? Does the <strong>Action Type</strong> help?  <ul>
 <li>What are the 3 data sources GuardDuty uses?</li>
 </ul>
 </li>
-<li><strong>Scrolling down</strong> the Findings list again you see another high severity <strong>[SAMPLE] Backdoor:EC2/DenialOfService.UdpOnTcpPorts</strong>.</li>
+<li><strong>Scrolling down</strong> the Findings list again you see another severity of type <strong>Behavior:EC2/TrafficVolumeUnusual</strong></li>
 <li>Here you see a lot of the same type of information. But why is this <strong>Action Type</strong> different?<ul>
 <li>If we didn’t turn on those logs how did it see the traffic?</li>
 </ul>
 </li>
-<li><strong>Scrolling down</strong> the Findings list a bit more you find <strong>[SAMPLE]UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration</strong></li>
+<li><strong>Scrolling down</strong> the Findings list a bit more you find a finding for <strong>Policy:IAMUser/RootCredentialUsage</strong></li>
 <li>This one not only has a different <strong>Action Type</strong> but also starts with <strong>IAMUser</strong> instead of <strong>EC2</strong>. Why does that matter?  <ul>
 <li>Is this a different data source?</li>
 </ul>
 </li>
 </ol>
-<p>Now you’ve seen that GuardDuty is monitoring logs on your behalf, and without you having to pay for storage, the AI/ML or Threat feeds, and the man hours to do the analysis. This is all happening at Cloud scale too, no longer do you need to have terabytes of logs that are never touched.</p>
+<p>Now you’ve seen that GuardDuty is monitoring logs on your behalf, and without you having to pay for storage, the AI/ML or Threat feeds, and the hours to do the analysis. This is all happening at Cloud scale too, no longer do you need to have terabytes of logs that are never touched.</p>
 <h2 id="reducing-the-risk-of-admin-access-and-administrative-ports">Reducing the risk of Admin access and administrative ports</h2>
 <p>Finally, let's further reduce administrative risks by reducing access and improving logging. With our current setup, there is still a risk of open administrative ports, right? It's a bigger risk if those ports are open to the internet and a smaller risk if open internally for malware to find. Can we find a way around this requirement?</p>
 <ol>
@@ -662,7 +661,7 @@ Now that we’ve got good logging of the Control Plane (API commands and Changes
 
 
 <p>That looks like the Security Group we modified doesn’t it?</p>
-<div class="codehilite"><pre><span></span><span class="err">ping 8.8.8.8</span>
+<div class="codehilite"><pre><span></span><span class="err">ping 1.1.1.1</span>
 </pre></div>
 
 

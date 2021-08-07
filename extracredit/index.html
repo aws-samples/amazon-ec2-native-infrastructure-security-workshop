@@ -430,7 +430,7 @@
 <p><strong>Systems Manager</strong></p>
 <blockquote>
 <p><strong>ListInstanceAssociations</strong> <br />
-<strong>UpdateInstanceAssociations</strong>   </p>
+<strong>UpdateInstanceAssociationsStatus</strong>   </p>
 </blockquote>
 </li>
 <li>
@@ -446,10 +446,10 @@
 <li><strong>Save</strong> that configuration.</li>
 <li>
 <p>Now back at <strong>Sessions</strong>, you can <strong>Start a session</strong> with any server with the SSM agent and access to the SSM Service.</p>
-<div class="codehilite"><pre><span></span><span class="err">&gt;  TOKEN=`curl -X PUT &quot;http://169.254.169.254/latest/api/token&quot; -H &quot;X-aws-ec2-metadata-token-ttl-seconds: 21600&quot;`</span>
-<span class="err">&gt;  curl -H &quot;X-aws-ec2-metadata-token: $TOKEN&quot;  http://169.254.169.254/latest/meta-data/instance-id</span>
-<span class="err">&gt;  curl -H &quot;X-aws-ec2-metadata-token: $TOKEN&quot;  http://169.254.169.254/latest/meta-data/security-groups</span>
-<span class="err">&gt;  curl -H &quot;X-aws-ec2-metadata-token: $TOKEN&quot;  http://169.254.169.254/latest/meta-data/iam/security-credentials/SharedServerConnectivityRole</span>
+<div class="codehilite"><pre><span></span><span class="err"> TOKEN=`curl -X PUT &quot;http://169.254.169.254/latest/api/token&quot; -H &quot;X-aws-ec2-metadata-token-ttl-seconds: 21600&quot;`</span>
+<span class="err"> curl -H &quot;X-aws-ec2-metadata-token: $TOKEN&quot;  http://169.254.169.254/latest/meta-data/instance-id</span>
+<span class="err"> curl -H &quot;X-aws-ec2-metadata-token: $TOKEN&quot;  http://169.254.169.254/latest/meta-data/security-groups</span>
+<span class="err"> curl -H &quot;X-aws-ec2-metadata-token: $TOKEN&quot;  http://169.254.169.254/latest/meta-data/iam/security-credentials/SharedServerConnectivityRole</span>
 </pre></div>
 
 
