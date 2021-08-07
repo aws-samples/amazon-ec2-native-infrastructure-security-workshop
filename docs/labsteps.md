@@ -157,20 +157,20 @@ Finally, let's further reduce administrative risks by reducing access and improv
 8.    Is this a console? For the AWS server? Let’s find out.  
        Type: 
   
-        >  TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"`  
-        >  curl -H "X-aws-ec2-metadata-token: $TOKEN"  http://169.254.169.254/latest/meta-data/instance-id  
+        TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"`  
+        curl -H "X-aws-ec2-metadata-token: $TOKEN"  http://169.254.169.254/latest/meta-data/instance-id  
    
        Does that instance ID look familiar?
 
-        >  curl -H "X-aws-ec2-metadata-token: $TOKEN"  http://169.254.169.254/latest/meta-data/security-groups
+        curl -H "X-aws-ec2-metadata-token: $TOKEN"  http://169.254.169.254/latest/meta-data/security-groups
 
        That looks like the Security Group we modified doesn’t it?
 
-       	>  ping 8.8.8.8
+       	ping 8.8.8.8
 
        Should it work?
 
-        >  curl -H "X-aws-ec2-metadata-token: $TOKEN"  http://169.254.169.254/latest/meta-data/iam/security-credentials/SharedServerConnectivityRole
+        curl -H "X-aws-ec2-metadata-token: $TOKEN"  http://169.254.169.254/latest/meta-data/iam/security-credentials/SharedServerConnectivityRole
 
 
        Sure looks like an AWS server.
