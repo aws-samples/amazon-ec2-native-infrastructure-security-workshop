@@ -18,8 +18,7 @@ We want to enable detailed, holistic logging and network-based security monitori
 4.    Let’s set a **Trail Name** of “**All-API-Commands-across-all-Regions**”. 
 6.    We should save these for further evaluation, so you would want to **Create a new S3 bucket** and call it “**cloudsecurity-demo-bucket-{myname}**”. (Don’t forget, S3 buckets must have unique names, so make sure to add your name at the end. They can also only be lower case letters, numbers, “-“, and “.”)
 1.    Log file encryption will be enabled by default. Give it the name of a new KMS key to use for the encryption by specifiying "**cloudsecurity-demo-kms-key**".
-7.    After we **Create** that trail, we'll get the option to pick what **Events** we want to record.
-1.    Make sure to select **Management Events**, with **Read** / **Write** activity, at minimum.  These options will show us every API call made to our AWS environment moving forward.
+7.    Now we'll get the option to pick what **Events** we want to record. Make sure to select **Management Events**, with **Read** / **Write** activity, at minimum.  These options will show us every API call made to our AWS environment moving forward.
      * What are your other options? When would you want to enable those? 
 1. Click *Create* to finalize the trail.  We can come back to look at the results later.
      * Monitoring what API calls are made is great, but it’s difficult to convert that into something like Change Management for all infrastructure in the cloud. Is there a service to help there?
@@ -43,19 +42,19 @@ Let's review and improve upon granular control of communication between workload
 2.    Picking a Security Group like the **Services Server Security Group** we can see the more traditional way of doing things.
 3.    Checking the **Outbound** rules, we see the servers can talk to a range of IP’s, 65,536 to be precise. But there are only maybe 6-8 servers that they actually need to talk to.
 4.    Well, if we copy the **Security Group ID** of the **PoC Web Server Security Group** we can start to reduce that number
-5.    **Edit** the **Outbound** set of rules for the **Services Server Security Group**. Delete the 10.0.0.0/16 rule and make a new rule with the Security Group name you copied.
+5.    **Edit** the **Outbound** set of rules for the **Services Server Security Group**. Delete the 10.0.0.0/16 rule. Then, make a new rule with the Security Group name you copied.
 6.    **Save** this and you’ll see the **Destination** of the rule now shows the Security Group you listed.
 7.    You can **repeat** this by **Edit**ing and **Adding Rule**s for each security group you want to allow access to.
 
 In doing this, you’ve reduced the scope of internal traffic communication from 65,636 host down to 8\. Additionally, if you ever need to stand up more servers in these groups, they would be automatically accessible without intervention, as long as you put them in the same Security Group. On premise, you would either need to have Firewalls between all internal VLAN’s, Routers, and sites or complex Network ACL’s on every switch in your environment. This reduces the risk of threats, the risk of misconfiguration, and the operational burden all at once.
 
 ## When Security includes explicitly denying network access
-Let's improve on our network-based controls by using Network ACLs to prevent side-to-side movement in a granular way.
+Let's improve on our network-based controls by using Network ACLs to prevent lateral movement in a granular way.
 
 1.    Security Groups are awesome at allowing access, but in **VPC** Services, **Network ACLs** are great at explicitly blocking them.
 2.    For instance, if you wanted to make sure you explicitly blocked the Load Balancer in my WebApp from talking to my Database servers, you could **Create a network ACL**.
-3.    I would name it “**LoadBalancerIsolation**” and put it in the **Web Application VPC**.
-4.    After selecting the new network ACL, I would add an **Outbound Rule** by **Editing Outbound Rules**
+3.    You can name it “**LoadBalancerIsolation**” and put it in the **Web Application VPC**.
+4.    After selecting the new network ACL, add an **Outbound Rule** by **Editing Outbound Rules**
 5.    **Adding Rules** like these would block whatever Subnet you apply this to from talking to the Database Subnets but still allow access to the rest of the network, including the Web and Services VPC. Note that NACLs are evaluated in the specific order of their Rule #. 
       * Rule #: **50**  
       Of type **All Traffic**  
@@ -132,17 +131,17 @@ How would you do this on-premises?
 2.    Since this is a good design and relatively new, let’s create some demonstration findings in **Settings**
 3.    After we **Generate sample findings** we can go back to the **Findings**
 4.    You'll see some High Severity, Medium Severity,  and Informational Findings. Let’s investigate the High Severity finding called **[SAMPLE] 
-[SAMPLE] Backdoor:EC2/DenialOfService.Dns**
+[SAMPLE] Backdoor:EC2/C&CActivity.B!DNS**
 5.    You can see the (fake) instance that caused this Finding, what the instance did wrong, when it occurred, and more information. The “.Dns” at the end means something, do you know what? Does the **Action Type** help?  
       * What are the 3 data sources GuardDuty uses?
-6.    **Scrolling down** the Findings list again you see another high severity **[SAMPLE] Backdoor:EC2/DenialOfService.UdpOnTcpPorts**.
+6.    **Scrolling down** the Findings list again you see another severity of type **Behavior:EC2/TrafficVolumeUnusual**
 7.    Here you see a lot of the same type of information. But why is this **Action Type** different?
       * If we didn’t turn on those logs how did it see the traffic?
-8.    **Scrolling down** the Findings list a bit more you find **[SAMPLE]UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration**
+8.    **Scrolling down** the Findings list a bit more you find a finding for **Policy:IAMUser/RootCredentialUsage**
 9.    This one not only has a different **Action Type** but also starts with **IAMUser** instead of **EC2**. Why does that matter?  
       *  Is this a different data source?
 
-Now you’ve seen that GuardDuty is monitoring logs on your behalf, and without you having to pay for storage, the AI/ML or Threat feeds, and the man hours to do the analysis. This is all happening at Cloud scale too, no longer do you need to have terabytes of logs that are never touched.
+Now you’ve seen that GuardDuty is monitoring logs on your behalf, and without you having to pay for storage, the AI/ML or Threat feeds, and the hours to do the analysis. This is all happening at Cloud scale too, no longer do you need to have terabytes of logs that are never touched.
 
 ## Reducing the risk of Admin access and administrative ports
 Finally, let's further reduce administrative risks by reducing access and improving logging. With our current setup, there is still a risk of open administrative ports, right? It's a bigger risk if those ports are open to the internet and a smaller risk if open internally for malware to find. Can we find a way around this requirement?
@@ -166,7 +165,7 @@ Finally, let's further reduce administrative risks by reducing access and improv
 
        That looks like the Security Group we modified doesn’t it?
 
-       	ping 8.8.8.8
+       	ping 1.1.1.1
 
        Should it work?
 
